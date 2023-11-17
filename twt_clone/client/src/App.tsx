@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import {Routes, Route } from 'react-router-dom'
-import FrontPage from './pages/FrontPage';
 import Home from './pages/Home';
 
 // create new tabs for empty href
@@ -9,7 +8,6 @@ import Home from './pages/Home';
 function App() {
   return (
     <Routes>
-      <Route path='/' element = {<FrontPage />}/>
       <Route path='/Home' element = {<Home />}/>
     </Routes>
   )
