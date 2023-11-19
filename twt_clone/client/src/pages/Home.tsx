@@ -57,8 +57,10 @@ function GetStatus(){
   }, []);
 
   return (
-    <div>{foryou.map((status) =>(
-     <article key={status._id}>
+    <div >
+    <div className='statusList'>{foryou.map((status) =>(
+      <div key={status._id} className='status'>
+     <article >
        <a href=""> <b><GetInfo user= {status.uname}/></b> </a>
        <a href="">{status.uname}</a>
        <a href="">{formatDistanceStrict(parseISO(status.createdAt), new Date())}</a>
@@ -69,9 +71,30 @@ function GetStatus(){
        <div>repost {status.repost}</div>
        <div>likes {status.likes}</div>
      </article>
+     </div>
        ))}</div>
-
+      </div>
      )
+}
+
+function LeftSide(){
+  return(
+  <div className='navbanner'>
+    <nav aria-label='Primary' role='navigation'>
+      <ul>
+      <li><a href="">Home</a></li>
+      <li><a href="">Explore</a></li>
+      <li><a href="">Notification</a></li>
+      <li><a href="">Messages</a></li>
+      <li><a href="">Lists</a></li>
+      <li><a href="">Bookmarks</a></li>
+      <li><a href="">Communities</a></li>
+      <li><a href="">Premium</a></li>
+      <li><a href="">Profile</a></li>
+      </ul>
+    </nav>
+    </div>
+    )
 }
 
 function Home() {
@@ -96,22 +119,8 @@ function Home() {
   
 
   return (
-    <>
-    <div className='navbanner'>
-    <nav aria-label='Primary' role='navigation'>
-      <a href="">Home</a>
-      <a href="">Explore</a>
-      <a href="">Notification</a>
-      <a href="">Messages</a>
-      <a href="">Lists</a>
-      <a href="">Bookmarks</a>
-      <a href="">Communities</a>
-      <a href="">Premium</a>
-      <a href="">Profile</a>
-
-    </nav>
-    </div>
-    
+    <>  
+    <div><LeftSide /> </div>
     <div>
       {loading ? (<Spinner />):
        (<div>
