@@ -1,6 +1,8 @@
-* {
+/* * {
   margin: 0 ;
   padding: 0;
+  background-color: #000000;
+  color: #fffefe;
 }
 
 .navbanner {
@@ -13,9 +15,9 @@ ul {
   padding: 0;
   width: 25%;
   background-color: #000000;
-  height: 100%; /* Full height */
-  position: fixed; /* Make it stick, even on scroll */
-  overflow: auto; /* Enable scrolling if the sidenav has too much content */
+  height: 100%;  Full height
+  position: fixed;  Make it stick, even on scroll 
+  overflow: auto; Enable scrolling if the sidenav has too much content 
 }
 
 li a {
@@ -27,7 +29,7 @@ li a {
   text-decoration: none;
 }
 
-/* Change the link color on hover */
+ Change the link color on hover 
 li a:hover {
   background-color: #555;
   color: white;
@@ -37,16 +39,12 @@ li a:hover {
   text-decoration-thickness: 2px;
 }
 
-.statusList{
-  justify-content: center;
-  align-items: center;
-}
 .status {
-  background-color: blanchedalmond;
+  background-color: #000000;
+  color: #fffefe;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 200px;
-  border: 3px solid green;
   margin: auto;
-}
+} */

@@ -1,4 +1,9 @@
 import { useEffect, useState} from 'react';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import Container  from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/esm/Row';
+import Col from 'react-bootstrap/esm/Col';
 import React from 'react';
 import axios from 'axios';
 import Spinner from '../components/Spinner';
@@ -61,9 +66,10 @@ function GetStatus(){
     <div className='statusList'>{foryou.map((status) =>(
       <div key={status._id} className='status'>
      <article >
-       <a href=""> <b><GetInfo user= {status.uname}/></b> </a>
-       <a href="">{status.uname}</a>
-       <a href="">{formatDistanceStrict(parseISO(status.createdAt), new Date())}</a>
+      <div><a href=""> <b><GetInfo user= {status.uname}/></b> </a></div>
+      <div><a href="">{status.uname}</a></div>
+      <div><a href="">{formatDistanceStrict(parseISO(status.createdAt), new Date())}</a></div>
+       
        <div>
          {status.status}
          </div>
@@ -77,38 +83,41 @@ function GetStatus(){
      )
 }
 
-function LeftSide(){
+function LeftSide({ user } : { user: User }){
+
   return(
-  <div className='navbanner'>
-    <nav aria-label='Primary' role='navigation'>
-      <ul>
-      <li><a href="">Home</a></li>
-      <li><a href="">Explore</a></li>
-      <li><a href="">Notification</a></li>
-      <li><a href="">Messages</a></li>
-      <li><a href="">Lists</a></li>
-      <li><a href="">Bookmarks</a></li>
-      <li><a href="">Communities</a></li>
-      <li><a href="">Premium</a></li>
-      <li><a href="">Profile</a></li>
-      </ul>
-    </nav>
+  <div className=''>
+    <Navbar bg= "dark" data-bs-theme="dark" className='position-fixed' >
+    <Nav defaultActiveKey="/home" className='flex-sm-column h5 text-start' >
+      <Nav.Link href='/home'>Home</Nav.Link>
+      <Nav.Link>Home</Nav.Link>
+      <Nav.Link>Explore</Nav.Link>
+      <Nav.Link>Notification</Nav.Link>
+      <Nav.Link>Messages</Nav.Link>
+      <Nav.Link>lists</Nav.Link>
+      <Nav.Link>Bookmarks</Nav.Link>
+      <Nav.Link>Communities</Nav.Link>
+      <Nav.Link>Premium</Nav.Link>
+      <Nav.Link>Profile</Nav.Link>
+      <Nav.Link className='fs-6 fw-lighter'>@{user.uname}</Nav.Link>
+    </Nav>
+    </Navbar>
     </div>
     )
 }
 
 function Home() {
-  const [user, setUser] = useState<User[]>([]);
+  const [user, setUser] = useState<User>({} as User);
   
   const [recommended, setRecommended] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(()=> {
     setLoading(true);
-    axios.get("http://localhost:5555/users")
+    axios.get("http://localhost:5555/JaimeL")
     .then((res)=>{
-      console.log(res.data.data);
-      setUser(res.data.data);
+      console.log(res.data);
+      setUser(res.data);
       setLoading(false);
     }).catch((error)=>{
       console.log(error);
@@ -119,15 +128,41 @@ function Home() {
   
 
   return (
-    <>  
-    <div><LeftSide /> </div>
-    <div>
-      {loading ? (<Spinner />):
-       (<div>
+    <> 
+    
+    <Container className='bg-dark text-white' fluid >
+      <Row >
+        <Col xs lg='3' ><LeftSide user = { user } /> </Col>
+        <Col>
+          <Nav justify variant='underline'>
+            <Nav.Item>
+              <span>For you  </span>
+            </Nav.Item>
+            <Nav.Item>
+              <span> Following</span>
+            </Nav.Item>
+          </Nav>
+          <Row>
+            {loading ? (<Spinner />):
+          (<div>
           <GetStatus />
-       </div>)}
+          </div>)}
+          </Row>
+          
+        </Col>
+        <Col>
+        </Col>
+      </Row>
+
+    </Container> 
+    
+    <div><a href=""></a></div>
+    <div></div>
+    <div></div>
+    <div>
       
     </div>
+    
     </>
   )
 }
