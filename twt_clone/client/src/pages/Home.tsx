@@ -4,6 +4,8 @@ import Navbar from 'react-bootstrap/Navbar';
 import Container  from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/esm/Row';
 import Col from 'react-bootstrap/esm/Col';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 import React from 'react';
 import axios from 'axios';
 import Spinner from '../components/Spinner';
@@ -83,6 +85,41 @@ function GetStatus(){
      )
 }
 
+function CreateStatus(){
+  const [status, setStatus] = useState<string>();
+  const [unamne, setUname] = useState<string>();
+  const handleNewStatus = (e: React.FormEvent) => {
+    e.preventDefault()
+    const newStatus = {
+      status : String,
+      uname : String,
+    }
+
+    axios
+      .post('http://localhost:5555/createStatus', newStatus)
+      .then(()=>{
+        
+      })
+      .catch((err) =>{
+        console.log(err);
+      });
+  }
+  
+
+  return(
+      <>
+        <Form>
+          <Form.Group>
+            <Form.Control type='text' placeholder='What is happening!?' value={status} onChange= {(e)=> setStatus(e.target.value)}className='text-bg-dark border-0'/>
+          </Form.Group>
+          <Button variant="primary" type="submit" className='rounded'>
+                Post
+          </Button>
+        </Form>
+      </>
+    )
+  
+}
 function LeftSide({ user } : { user: User }){
 
   return(
@@ -108,7 +145,6 @@ function LeftSide({ user } : { user: User }){
 
 function Home() {
   const [user, setUser] = useState<User>({} as User);
-  
   const [recommended, setRecommended] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -142,6 +178,9 @@ function Home() {
               <span> Following</span>
             </Nav.Item>
           </Nav>
+          <Row>
+            <CreateStatus />
+          </Row>
           <Row>
             {loading ? (<Spinner />):
           (<div>

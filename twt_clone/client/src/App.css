@@ -48,3 +48,8 @@ li a:hover {
   height: 200px;
   margin: auto;
 } */
+
+/* changes the color of the placeholder text */
+.form-control::placeholder { 
+  color: gray;
+}
