@@ -62,18 +62,28 @@ app.get('/status', async (req,res) => {
     }
 });
 
-// app.get('/createStatus', async (req, res) => {
-//     const newStatus = {
-//         uname: "CStark",
-//         status: "Minima odit officiis minima nam. Aspernatur id reprehenderit eius inve…",
-//         likes: 1,
-//         repost: 2,
-//         comments: 3,
-//         createdAt: new Date(),
-//         updatedAt: new Date(),
-//     }
-//     const test = await Status.create(newStatus);
-// });
+// 
+app.post('/createStatus', async (req, res) => {
+     try{
+        console.log(req.body)
+        const newStatus = {
+            uname: req.body.uname.current,
+            status: req.body.status,
+            likes: 0,
+            repost: 0,
+            comments: 0,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+        }
+        const status = await Status.create(newStatus);
+        return res.status(201).send(status);
+        
+    }
+    catch(err){
+        console.log(err);
+        res.status(500).send({message: err.message});
+    }
+});
 
 //Route to get a user
 app.get('/:uname', async (req, res) =>{

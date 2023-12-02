@@ -1,4 +1,4 @@
-import { useEffect, useState} from 'react';
+import { useEffect, useRef, useState} from 'react';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Container  from 'react-bootstrap/Container';
@@ -8,8 +8,9 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import React from 'react';
 import axios from 'axios';
-import Spinner from '../components/Spinner';
+import Spinner from 'react-bootstrap/Spinner';
 import { formatDistanceStrict, parseISO } from 'date-fns';
+import Alert  from 'react-bootstrap/Alert';
 
 
 // create new tabs for empty href
@@ -37,7 +38,6 @@ function GetInfo({ user } : { user: string }){
   useEffect(()=> {
     axios.get(`http://localhost:5555/${user}`)
     .then((res)=>{
-      console.log(res.data);
       setName(res.data.name);
     }).catch((error)=>{
       console.log(error);
@@ -49,17 +49,13 @@ function GetInfo({ user } : { user: string }){
 
 function GetStatus(){
   const [foryou, setForyou] = useState<Status[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+
   useEffect(()=> {
-    setLoading(true);
     axios.get("http://localhost:5555/status")
     .then((res)=>{
-      console.log(res.data);
       setForyou(res.data);
-      setLoading(false);
     }).catch((error)=>{
       console.log(error);
-      setLoading(false);
     })
   }, []);
 
@@ -86,33 +82,39 @@ function GetStatus(){
 }
 
 function CreateStatus(){
-  const [status, setStatus] = useState<string>();
-  const [unamne, setUname] = useState<string>();
-  const handleNewStatus = (e: React.FormEvent) => {
-    e.preventDefault()
-    const newStatus = {
-      status : String,
-      uname : String,
-    }
-
-    axios
-      .post('http://localhost:5555/createStatus', newStatus)
-      .then(()=>{
-        
-      })
-      .catch((err) =>{
-        console.log(err);
-      });
-  }
+  const [status, setStatus] = useState<string>('');
+  const uname = useRef<string>('JaimeL');
+  const [loading, setLoading] = useState<boolean>(false);
   
-
+  const handleNewStatus = (e: React.FormEvent) => {
+      e.preventDefault()
+      const newStatus = {
+        status,
+        uname,
+      }
+      setLoading(true)
+      axios
+        .post('http://localhost:5555/createStatus', newStatus)
+        .then(()=>{
+          setLoading(false);
+        })
+        .catch((err) =>{
+          setLoading(false);
+          console.log(err);
+          <Alert variant='danger'>
+            <p>An error happened.</p>
+          </Alert>
+        });
+    }
+  
   return(
       <>
+      {loading ? (<Spinner />):''}
         <Form>
-          <Form.Group>
+          <Form.Group controlId='newstatus'>
             <Form.Control type='text' placeholder='What is happening!?' value={status} onChange= {(e)=> setStatus(e.target.value)}className='text-bg-dark border-0'/>
           </Form.Group>
-          <Button variant="primary" type="submit" className='rounded'>
+          <Button variant="primary" type="submit" className='rounded' onClick={handleNewStatus}>
                 Post
           </Button>
         </Form>
@@ -152,7 +154,6 @@ function Home() {
     setLoading(true);
     axios.get("http://localhost:5555/JaimeL")
     .then((res)=>{
-      console.log(res.data);
       setUser(res.data);
       setLoading(false);
     }).catch((error)=>{
