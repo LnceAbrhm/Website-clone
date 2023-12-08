@@ -53,3 +53,8 @@ li a:hover {
 .form-control::placeholder { 
   color: gray;
 }
+
+.main{
+
+    background: #000;
+}

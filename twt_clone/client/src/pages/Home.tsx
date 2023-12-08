@@ -6,6 +6,7 @@ import Row from 'react-bootstrap/esm/Row';
 import Col from 'react-bootstrap/esm/Col';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
 import React from 'react';
 import axios from 'axios';
 import Spinner from 'react-bootstrap/Spinner';
@@ -112,7 +113,7 @@ function CreateStatus(){
       {loading ? (<Spinner />):''}
         <Form>
           <Form.Group controlId='newstatus'>
-            <Form.Control type='text' placeholder='What is happening!?' value={status} onChange= {(e)=> setStatus(e.target.value)}className='text-bg-dark border-0'/>
+            <Form.Control type='textarea' placeholder='What is happening!?' value={status} onChange= {(e)=> setStatus(e.target.value)}className='text-bg-dark border-0'/>
           </Form.Group>
           <Button variant="primary" type="submit" className='rounded' onClick={handleNewStatus}>
                 Post
@@ -125,8 +126,8 @@ function CreateStatus(){
 function LeftSide({ user } : { user: User }){
 
   return(
-  <div className=''>
-    <Navbar bg= "dark" data-bs-theme="dark" className='position-fixed' >
+  <div >
+    <Navbar data-bs-theme="dark" className='position-fixed' >
     <Nav defaultActiveKey="/home" className='flex-sm-column h5 text-start' >
       <Nav.Link href='/home'>Home</Nav.Link>
       <Nav.Link>Home</Nav.Link>
@@ -166,42 +167,61 @@ function Home() {
 
   return (
     <> 
-    
-    <Container className='bg-dark text-white' fluid >
-      <Row >
-        <Col xs lg='3' ><LeftSide user = { user } /> </Col>
-        <Col>
-          <Nav justify variant='underline'>
-            <Nav.Item>
-              <span>For you  </span>
-            </Nav.Item>
-            <Nav.Item>
-              <span> Following</span>
-            </Nav.Item>
-          </Nav>
-          <Row>
-            <CreateStatus />
-          </Row>
-          <Row>
-            {loading ? (<Spinner />):
-          (<div>
-          <GetStatus />
-          </div>)}
-          </Row>
-          
-        </Col>
-        <Col>
-        </Col>
-      </Row>
+    <Container className='main' fluid>
+      <Container className=' text-white'  >
+        <Row className='border'>
 
-    </Container> 
-    
-    <div><a href=""></a></div>
-    <div></div>
-    <div></div>
-    <div>
-      
-    </div>
+          <Col className='border' md={3}><LeftSide user = { user } /> </Col>
+
+          <Col className='border' md={6}>
+          <div>
+            <Row className=''>
+              <Nav className='justify-content-left position-fixed' >
+                
+                
+                <Col md={2} className='text-center'>
+                  <div>
+                  <Nav.Item >
+                  <Nav.Link href='/home' className=''><div><span>For you  </span></div></Nav.Link>
+                  </Nav.Item>
+                  </div>
+                </Col>
+               
+                <div ><Nav.Item>
+                  <Nav.Link href=''><span> Following</span></Nav.Link>
+                </Nav.Item>
+                </div>
+              </Nav>
+            </Row>
+          </div>
+            <Row style={{marginBottom: 50}}></Row>
+            <Row>
+              <CreateStatus />
+            </Row>
+            <Row>
+              {loading ? (<Spinner />):
+            (<div>
+            <GetStatus />
+            </div>)}
+            </Row>
+            
+          </Col>
+          
+          <Col>
+          <Card bg='dark' text='white'>
+            <Card.Body>
+              <Card.Title>Subscribe to Premium</Card.Title>
+              <Card.Text>Subscribe to unlock new features and if eligible, receive a share of ads revenue.</Card.Text>
+              <Button>Subscribe</Button>
+            </Card.Body>  
+          </Card>
+          <Card></Card>
+          <Card></Card>
+          </Col>
+        </Row>
+
+      </Container> 
+    </Container>
     
     </>
   )
