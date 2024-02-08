@@ -20,7 +20,7 @@ mongoose.connection.on("error", (err) => {
 });
 
 app.get('/home', (req, res) => {
-    console.log(req);
+    logger(req);
     return res.send('Twitter Clone');
 });
 
@@ -28,13 +28,18 @@ app.get('/home', (req, res) => {
 app.get('/users', async (req,res) =>{
     try{
         const users = await Users.find({});
+        const extractNames = []; 
+       for(let i = 0; i<users.length; i++){
+        extractNames[i] = {uname : users[i].uname, name : users[i].name};
+       }
+
         res.status(200).json({
             count: users.length,
-            data: users
+            data: extractNames
         });
     } 
     catch (error){
-        console.log(error);
+        logger(error);
         res.status(500).send({message: error.message});
 
     }
@@ -80,7 +85,7 @@ app.post('/createStatus', async (req, res) => {
         
     }
     catch(err){
-        console.log(err);
+        logger(err);
         res.status(500).send({message: err.message});
     }
 });
@@ -93,7 +98,6 @@ app.get('/:uname', async (req, res) =>{
         const { uname } = req.params;
         const user = await Users.findOne({uname: `${uname}`});
         res.status(200).json(user);
-        logger(uname);
         
     }
     catch(error){
@@ -108,6 +112,7 @@ app.get('/:uname', async (req, res) =>{
 function logger(log){
     console.log(log)
 }
+
 app.listen(PORT, function(){
     console.log('Express started on http://localhost:' + PORT + '; press Ctrl-C to terminate');
 });

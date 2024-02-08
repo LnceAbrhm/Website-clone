@@ -12,9 +12,10 @@ import axios from 'axios';
 import Spinner from 'react-bootstrap/Spinner';
 import { formatDistanceStrict, parseISO } from 'date-fns';
 import Alert  from 'react-bootstrap/Alert';
+import { FormControl, InputGroup } from 'react-bootstrap';
 
 
-// create new tabs for empty href
+
 interface User{
   name: string;
   uname: string;
@@ -87,7 +88,7 @@ function CreateStatus(){
   const uname = useRef<string>('JaimeL');
   const [loading, setLoading] = useState<boolean>(false);
   
-  const handleNewStatus = (e: React.FormEvent) => {
+  function handleNewStatus (e: React.FormEvent) {
       e.preventDefault()
       const newStatus = {
         status,
@@ -123,6 +124,7 @@ function CreateStatus(){
     )
   
 }
+
 function LeftSide({ user } : { user: User }){
 
   return(
@@ -144,6 +146,39 @@ function LeftSide({ user } : { user: User }){
     </Navbar>
     </div>
     )
+}
+
+function SearchBar(){
+  const [results, setResults] = useState<User[]>([]);
+  const [query, setQuery] = useState<String>("");
+
+  useEffect(()=>{
+    axios.get("http://localhost:5555/users")
+  .then((res)=>{
+    setResults(res.data.data);
+  }).catch((error)=>{
+    console.log(error);
+  })
+  }, [])
+
+  // add filter()
+  const filteredResults = results.filter( result => {
+    return query=="" ? <div>Try searching for people,list, or keywords</div> : result.uname.toLowerCase().includes(query.toLowerCase()) || result.name.toLowerCase().includes(query.toLowerCase());
+  })
+
+  return (
+    <>
+    <InputGroup>
+    <FormControl type='search' placeholder='Search' onChange = {(e)=> setQuery(e.target.value)}/>
+    </InputGroup>
+    <div className='searchResults'>
+      {filteredResults.map(result =>(
+      <div>{result.uname}</div>
+      ))}
+    </div>
+    </>
+  )
+
 }
 
 function Home() {
@@ -182,7 +217,7 @@ function Home() {
                 <Col md={2} className='text-center'>
                   <div>
                   <Nav.Item >
-                  <Nav.Link href='/home' className=''><div><span>For you  </span></div></Nav.Link>
+                  <Nav.Link href='/home' className=''><div ><span >For you  </span></div></Nav.Link>
                   </Nav.Item>
                   </div>
                 </Col>
@@ -208,6 +243,9 @@ function Home() {
           </Col>
           
           <Col>
+          <Row>
+            <SearchBar />
+          </Row>
           <Card bg='dark' text='white'>
             <Card.Body>
               <Card.Title>Subscribe to Premium</Card.Title>

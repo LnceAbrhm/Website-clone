@@ -58,3 +58,7 @@ li a:hover {
 
     background: #000;
 }
+.searchResults {
+  
+  visibility: visible;
+}
