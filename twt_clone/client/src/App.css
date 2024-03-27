@@ -51,6 +51,7 @@ li a:hover {
 
 /* changes the color of the placeholder text */
 .form-control::placeholder { 
+  
   color: gray;
 }
 
@@ -59,6 +60,8 @@ li a:hover {
     background: #000;
 }
 .searchResults {
-  
-  visibility: visible;
+
+  visibility: hidden;
+  position: absolute;
+  z-index: 1;
 }

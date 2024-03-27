@@ -30,7 +30,7 @@ app.get('/users', async (req,res) =>{
         const users = await Users.find({});
         const extractNames = []; 
        for(let i = 0; i<users.length; i++){
-        extractNames[i] = {uname : users[i].uname, name : users[i].name};
+        extractNames[i] = {id: users[i]._id, uname : users[i].uname, name : users[i].name};
        }
 
         res.status(200).json({

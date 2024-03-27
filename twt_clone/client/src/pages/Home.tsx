@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState} from 'react';
+import { FormEvent, useEffect, useRef, useState, useMemo} from 'react';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Container  from 'react-bootstrap/Container';
@@ -12,11 +12,13 @@ import axios from 'axios';
 import Spinner from 'react-bootstrap/Spinner';
 import { formatDistanceStrict, parseISO } from 'date-fns';
 import Alert  from 'react-bootstrap/Alert';
-import { FormControl, InputGroup } from 'react-bootstrap';
+import { CardLink, FormControl, InputGroup, NavDropdown, NavbarCollapse, Stack } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 
 
 interface User{
+  id: string;
   name: string;
   uname: string;
   pass: string;
@@ -114,7 +116,7 @@ function CreateStatus(){
       {loading ? (<Spinner />):''}
         <Form>
           <Form.Group controlId='newstatus'>
-            <Form.Control type='textarea' placeholder='What is happening!?' value={status} onChange= {(e)=> setStatus(e.target.value)}className='text-bg-dark border-0'/>
+            <Form.Control type='textarea' placeholder='What is happening!?' value={status} onChange= {(e)=> setStatus(e.target.value)} className='text-bg-dark border-0'/>
           </Form.Group>
           <Button variant="primary" type="submit" className='rounded' onClick={handleNewStatus}>
                 Post
@@ -151,31 +153,64 @@ function LeftSide({ user } : { user: User }){
 function SearchBar(){
   const [results, setResults] = useState<User[]>([]);
   const [query, setQuery] = useState<String>("");
+  const navigate = useNavigate();
+    useEffect(()=>{
+      axios.get("http://localhost:5555/users")
+      .then((res)=>{
+        setResults(res.data.data);
+      }).catch((error)=>{
+        console.log(error);
+      })
+      })
 
-  useEffect(()=>{
-    axios.get("http://localhost:5555/users")
-  .then((res)=>{
-    setResults(res.data.data);
-  }).catch((error)=>{
-    console.log(error);
-  })
-  }, [])
+    const filteredResults = useMemo(()=> { return results.filter( result => {
+      return  result.uname.toLowerCase().includes(query.toLowerCase()) || result.name.toLowerCase().includes(query.toLowerCase());
+    })}, [query])
 
-  // add filter()
-  const filteredResults = results.filter( result => {
-    return query=="" ? <div>Try searching for people,list, or keywords</div> : result.uname.toLowerCase().includes(query.toLowerCase()) || result.name.toLowerCase().includes(query.toLowerCase());
-  })
-
+    function handleVisibilty(){
+      
+      document.getElementsByClassName('searchResults')[0].classList.toggle('visible');
+    }
+    
+    function handleRedirect(e : String){
+       return navigate(`/${e}`);
+    }
   return (
     <>
-    <InputGroup>
-    <FormControl type='search' placeholder='Search' onChange = {(e)=> setQuery(e.target.value)}/>
-    </InputGroup>
-    <div className='searchResults'>
-      {filteredResults.map(result =>(
-      <div>{result.uname}</div>
-      ))}
-    </div>
+    <Navbar className="bs-dark-bg-subtle justify-content-between d-block">
+        <Form >
+          
+            <Row >
+                <Col >
+                  
+                  <Form.Control type='text' placeholder='Search' onFocus={(e) => {handleVisibilty()}}
+                  onChange = {(e)=> setQuery(e.target.value)} onBlur= {(e) => {handleVisibilty()}}
+                  className='text-bg-dark border-0'
+                  /> {/** change the color of the search bar and add a dropdown for the results */}
+                  
+                </Col>
+            </Row>
+
+            <Row className='searchResults' >
+              <Card className='text-bg-dark border-0'>
+                <Col>
+                  <div >
+                    {query==="" ? <Card.Body><div>Try searching for people,list, or keywords</div></Card.Body> : filteredResults.map(result =>(
+                    
+                    <div id={result.id}>
+                      <Button type= 'button' onMouseDown={()=>{handleRedirect(result.name)}} variant='dark'> <div>{result.uname}</div>
+                      <div>{result.name}</div> </Button>
+                    </div>
+                    
+                    ))}
+                  </div>
+                </Col>
+              </Card>
+            </Row>
+          
+        </Form>
+      
+    </Navbar>
     </>
   )
 
@@ -202,7 +237,7 @@ function Home() {
 
   return (
     <> 
-    <Container className='main' fluid>
+    <Container className='main' fluid >
       <Container className=' text-white'  >
         <Row className='border'>
 
