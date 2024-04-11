@@ -216,6 +216,41 @@ function SearchBar(){
 
 }
 
+function RightSide(){
+  const [whatsHappening, setWhatsHappening] = useState<User[]>([]);
+  const [whoTofollow, setWhoToFollow] = useState<User[]>([]);
+  useEffect(()=>{
+    axios.get("http://localhost:5555/users")
+    .then((res)=>{
+      setWhoToFollow(res.data.data);
+    }).catch((error)=>{
+      console.log(error);
+    })
+    })
+
+  return(
+  <>
+    <Card bg='dark' text='white'>
+       <Card.Body>
+         <Card.Title>Subscribe to Premium</Card.Title>
+         <Card.Text>Subscribe to unlock new features and if eligible, receive a share of ads revenue.</Card.Text>
+         <Button>Subscribe</Button>
+       </Card.Body>  
+      </Card>
+    <Card>
+      <Card.Title>What's happening</Card.Title>
+      <Button></Button>
+      <Button>
+        
+      </Button>
+      </Card> 
+    <Card>
+      <Card.Title>Who to follow</Card.Title>
+      </Card>
+  </>
+  )
+}
+
 function Home() {
   const [user, setUser] = useState<User>({} as User);
   const [recommended, setRecommended] = useState<User[]>([]);
@@ -281,15 +316,7 @@ function Home() {
           <Row>
             <SearchBar />
           </Row>
-          <Card bg='dark' text='white'>
-            <Card.Body>
-              <Card.Title>Subscribe to Premium</Card.Title>
-              <Card.Text>Subscribe to unlock new features and if eligible, receive a share of ads revenue.</Card.Text>
-              <Button>Subscribe</Button>
-            </Card.Body>  
-          </Card>
-          <Card></Card>
-          <Card></Card>
+          
           </Col>
         </Row>
 

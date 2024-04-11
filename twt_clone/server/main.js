@@ -3,6 +3,8 @@ import mongoose from 'mongoose';
 import { PORT, MONGO_URI } from './config.js';
 import { Users } from './models/User.js';
 import { Status } from './models/Status.js';
+import { Highlights } from './models/Highlight.js';
+import { Trending } from './models/Whatstrending.js';
 import cors from 'cors';
 
 const app = express();
@@ -48,16 +50,6 @@ app.get('/users', async (req,res) =>{
 //Route to get all tweets
 app.get('/status', async (req,res) => {
     try{
-        // const newStatus = {
-        //     uname: "CStark",
-        //     status: "Minima odit officiis minima nam. Aspernatur id reprehenderit eius inve…",
-        //     likes: 1,
-        //     repost: 2,
-        //     comments: 3,
-        //     createdAt: new Date().toISOString(),
-        //     updatedAt: new Date().toISOString(),
-        // }
-        // const test = await Status.create(newStatus);
         const status = await Status.find({});
         res.status(200).json(status)
     }
@@ -106,7 +98,24 @@ app.get('/:uname', async (req, res) =>{
     }
 });
 
+app.get('/trending', async (req, res)=>{
 
+    try{
+        
+        const highlights = await Highlights.find({}).limit(1);
+        const trends = await Trending.find({}).limit(4);
+        
+        res.status(200).json({
+            highlight : highlights,
+            trending : trends,
+        });
+        
+    }
+    catch(error){
+        logger(error);
+        res.status(500).send({message: error.message});
+    }
+});
 
 
 function logger(log){
