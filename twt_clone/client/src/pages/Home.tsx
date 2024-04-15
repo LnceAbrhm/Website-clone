@@ -282,6 +282,7 @@ function RightSide(){
           </div>      
         ))}
       </div>
+      <Button>See more</Button>
       </Card> 
     <Card bg='dark' text='white'>
       <Card.Title>Who to follow</Card.Title>
@@ -293,6 +294,7 @@ function RightSide(){
           </div>      
         ))}
       </div>
+      <Button>See more</Button>
       </Card>
   </>
   )
