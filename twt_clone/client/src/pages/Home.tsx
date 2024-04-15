@@ -12,7 +12,6 @@ import axios from 'axios';
 import Spinner from 'react-bootstrap/Spinner';
 import { formatDistanceStrict, parseISO } from 'date-fns';
 import Alert  from 'react-bootstrap/Alert';
-import { CardLink, FormControl, InputGroup, NavDropdown, NavbarCollapse, Stack } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -34,6 +33,22 @@ interface Status{
   repost: number,
   createdAt: string, 
   updatedAt: string,
+}
+
+interface Highlight{
+  _id: string,
+  type : string,
+  title: string,
+  date: string, 
+  franchise: string,
+}
+
+interface Trend{
+  _id: string,
+  type : string,
+  title: string,
+  total: number,
+  location: string, 
 }
 
 function GetInfo({ user } : { user: string }){
@@ -133,8 +148,10 @@ function LeftSide({ user } : { user: User }){
   <div >
     <Navbar data-bs-theme="dark" className='position-fixed' >
     <Nav defaultActiveKey="/home" className='flex-sm-column h5 text-start' >
-      <Nav.Link href='/home'>Home</Nav.Link>
       <Nav.Link>Home</Nav.Link>
+      <Nav.Link href='/home'> <div><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" className="bi bi-house-door-fill" viewBox="0 0 16 16">
+        <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5"/>
+        </svg>Home</div></Nav.Link>
       <Nav.Link>Explore</Nav.Link>
       <Nav.Link>Notification</Nav.Link>
       <Nav.Link>Messages</Nav.Link>
@@ -161,7 +178,7 @@ function SearchBar(){
       }).catch((error)=>{
         console.log(error);
       })
-      })
+      }, [])
 
     const filteredResults = useMemo(()=> { return results.filter( result => {
       return  result.uname.toLowerCase().includes(query.toLowerCase()) || result.name.toLowerCase().includes(query.toLowerCase());
@@ -171,9 +188,8 @@ function SearchBar(){
       
       document.getElementsByClassName('searchResults')[0].classList.toggle('visible');
     }
-    
     function handleRedirect(e : String){
-       return navigate(`/${e}`);
+      return navigate(`/${e}`);
     }
   return (
     <>
@@ -186,7 +202,7 @@ function SearchBar(){
                   <Form.Control type='text' placeholder='Search' onFocus={(e) => {handleVisibilty()}}
                   onChange = {(e)=> setQuery(e.target.value)} onBlur= {(e) => {handleVisibilty()}}
                   className='text-bg-dark border-0'
-                  /> {/** change the color of the search bar and add a dropdown for the results */}
+                  /> 
                   
                 </Col>
             </Row>
@@ -217,17 +233,28 @@ function SearchBar(){
 }
 
 function RightSide(){
-  const [whatsHappening, setWhatsHappening] = useState<User[]>([]);
+  const [highlight, setHighlight] = useState<Highlight[]>([]);
+  const [trend, setTrend] = useState<Trend[]>([]);
   const [whoTofollow, setWhoToFollow] = useState<User[]>([]);
-  useEffect(()=>{
-    axios.get("http://localhost:5555/users")
-    .then((res)=>{
-      setWhoToFollow(res.data.data);
-    }).catch((error)=>{
-      console.log(error);
-    })
-    })
+    useEffect(()=>{
+      axios.get("http://localhost:5555/users")
+      .then((res)=>{
+        setWhoToFollow(res.data.data);
+      }).catch((error)=>{
+        console.log(error);
+      })
+      }, [])
 
+    useEffect(()=>{
+      axios.get("http://localhost:5555/trending")
+      .then((res)=>{
+        setTrend(res.data.trend);
+        setHighlight(res.data.highlight);
+      }).catch((error)=>{
+        console.log(error);
+      })
+      }, [])
+      console.log(highlight)
   return(
   <>
     <Card bg='dark' text='white'>
@@ -237,15 +264,35 @@ function RightSide(){
          <Button>Subscribe</Button>
        </Card.Body>  
       </Card>
-    <Card>
+    <Card bg='dark' text='white'>
       <Card.Title>What's happening</Card.Title>
-      <Button></Button>
-      <Button>
-        
-      </Button>
+      <div>
+        {highlight.map(result =>(         
+          <div id={result._id}>
+            <Button type= 'button' variant='dark'> <div>{result.title}</div>
+              <div>{result.franchise}</div> </Button>
+          </div>      
+        ))}
+      </div>
+      <div >
+          {trend.map(result =>(         
+          <div id={result._id}>
+            <Button type= 'button' variant='dark'> <div>{result.type}</div>
+              <div>{result.total}</div> </Button>
+          </div>      
+        ))}
+      </div>
       </Card> 
-    <Card>
+    <Card bg='dark' text='white'>
       <Card.Title>Who to follow</Card.Title>
+      <div >
+        {whoTofollow.map(result =>(         
+          <div id={result.id}>
+            <Button type= 'button' variant='dark'> <div>{result.name}</div>
+              <div>{result.uname}</div> </Button>
+          </div>      
+        ))}
+      </div>
       </Card>
   </>
   )
@@ -316,7 +363,9 @@ function Home() {
           <Row>
             <SearchBar />
           </Row>
-          
+          <Row>
+          <RightSide />
+          </Row>
           </Col>
         </Row>
 

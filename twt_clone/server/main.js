@@ -4,7 +4,7 @@ import { PORT, MONGO_URI } from './config.js';
 import { Users } from './models/User.js';
 import { Status } from './models/Status.js';
 import { Highlights } from './models/Highlight.js';
-import { Trending } from './models/Whatstrending.js';
+import { Trendings } from './models/Trending.js';
 import cors from 'cors';
 
 const app = express();
@@ -82,6 +82,26 @@ app.post('/createStatus', async (req, res) => {
     }
 });
 
+app.get('/trending', async (req, res)=>{
+
+    try{
+        
+        const highlight = await Highlights.find({}).limit(1);
+        const trend = await Trendings.find({}).limit(4);
+        
+        res.status(200).json({
+            highlight : highlight,
+            trend : trend
+        }
+        );
+        
+    }
+    catch(error){
+        logger(error);
+        res.status(500).send({message: error.message});
+    }
+});
+
 //Route to get a user
 app.get('/:uname', async (req, res) =>{
 
@@ -98,24 +118,7 @@ app.get('/:uname', async (req, res) =>{
     }
 });
 
-app.get('/trending', async (req, res)=>{
 
-    try{
-        
-        const highlights = await Highlights.find({}).limit(1);
-        const trends = await Trending.find({}).limit(4);
-        
-        res.status(200).json({
-            highlight : highlights,
-            trending : trends,
-        });
-        
-    }
-    catch(error){
-        logger(error);
-        res.status(500).send({message: error.message});
-    }
-});
 
 
 function logger(log){

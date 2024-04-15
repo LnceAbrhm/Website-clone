@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const statusSchema = mongoose.Schema({
-    id : Number,
+    id : String,
     uname : String,
     status: String,
     likes: Number,

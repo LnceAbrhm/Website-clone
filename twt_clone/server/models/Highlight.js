@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 
-const HighlightsSchema = mongoose.Schema({
-    id : Number,
+const highlightsSchema = mongoose.Schema({
+    id : String,
     type : String,
     title : String,
     date : String,
     franchise: String,
 });
 
-export const Highlights = mongoose.model('Highlights', HighlightsSchema);
+export const Highlights = mongoose.model('Highlights', highlightsSchema);

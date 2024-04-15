@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 
 const trendingSchema = mongoose.Schema({
-    id : Number,
+    id : String,
     type : String,
     title: String,
     total: Number,
     location: String,
 });
 
-export const Trending = mongoose.model('Trending', trendingSchema);
+export const Trendings = mongoose.model('Trendings', trendingSchema);
