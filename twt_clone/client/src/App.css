@@ -19,3 +19,20 @@
 .dropdown-toggle::after{
   display: none;
 }
+
+.nav-link:hover{
+  background: rgb(49, 49, 49);
+}
+
+
+.modal-content {
+  background-color: #000;
+}
+
+.leftnav div{
+  display: inline-block;
+}
+
+/* .test div{
+  display: block;
+} */
